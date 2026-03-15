@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Me | Graph Theorist</title>
+
+<style>
+
+body{
+margin:0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background:#0f172a;
+color:#e5e7eb;
+overflow-x:hidden;
+}
+
+/* NAVBAR */
+nav{
+position:sticky;
+top:0;
+background:#020617;
+border-bottom:1px solid #1e293b;
+padding:14px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:10;
+}
+
+nav .logo{
+font-weight:700;
+font-size:18px;
+color:#22c55e;
+}
+
+nav ul{
+list-style:none;
+display:flex;
+gap:25px;
+margin:0;
+padding:0;
+}
+
+nav a{
+text-decoration:none;
+color:#cbd5f5;
+font-size:14px;
+transition:0.3s;
+}
+
+nav a:hover{
+color:#22c55e;
+}
+
+/* HEADER */
+header{
+text-align:center;
+padding:100px 20px 60px 20px;
+position:relative;
+}
+
+h1{
+font-size:3rem;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#94a3b8;
+}
+
+/* CONTAINER */
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+position:relative;
+z-index:1;
+}
+
+.card{
+background:#111827;
+border-radius:20px;
+padding:30px;
+margin:20px 0;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+code{
+background:#020617;
+padding:4px 6px;
+border-radius:6px;
+}
+
+footer{
+text-align:center;
+padding:40px;
+color:#64748b;
+}
+
+/* GRAPH CANVAS */
+#graphCanvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="graphCanvas"></canvas>
+
+<nav>
+<div class="logo">G = (V, E)</div>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="#research">Research</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+
+<header>
+<h1>Yash Chawda</h1>
+<p class="subtitle">PhD Scholar | Graph Theory & Combinatorics</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>About Me</h2>
+<p>
+I am a PhD scholar working in <b>Graph Theory</b> and <b>Combinatorics</b>. My research explores the structure of discrete systems and the patterns that emerge from simple combinatorial principles.
+</p>
+
+<p>
+To me, mathematics resembles a graph: ideas are vertices, and insights form the edges connecting them.
+</p>
+</div>
+
+<div class="card" id="research">
+<h2>Research Interests</h2>
+<ul>
+<li>Graph Theory</li>
+<li>Extremal Combinatorics</li>
+<li>Discrete Structures</li>
+<li>Mathematical Thinking</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Mathematical Motto</h2>
+<p>
+Just as a connected graph allows a path between every pair of vertices,
+I believe mathematics connects ideas across seemingly distant areas.
+</p>
+
+<p>
+<code>Seek structure. Find patterns. Build connections.</code>
+</p>
+</div>
+
+<div class="card" id="contact">
+<h2>Contact</h2>
+<p>GitHub: <a href="https://github.com/" target="_blank">github.com</a></p>
+<p>Email: your-email@example.com</p>
+</div>
+
+</div>
+
+<footer>
+<p>Built with vertices, edges, and curiosity.</p>
+</footer>
+
+<script>
+
+const canvas = document.getElementById("graphCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let nodes = [];
+const NODE_COUNT = 60;
+const MAX_DIST = 130;
+
+for(let i=0;i<NODE_COUNT;i++){
+nodes.push({
+ x:Math.random()*canvas.width,
+ y:Math.random()*canvas.height,
+ vx:(Math.random()-0.5)*0.6,
+ vy:(Math.random()-0.5)*0.6
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let i=0;i<nodes.length;i++){
+let n1 = nodes[i];
+
+n1.x += n1.vx;
+n1.y += n1.vy;
+
+if(n1.x<0||n1.x>canvas.width) n1.vx*=-1;
+if(n1.y<0||n1.y>canvas.height) n1.vy*=-1;
+
+for(let j=i+1;j<nodes.length;j++){
+let n2 = nodes[j];
+
+let dx = n1.x-n2.x;
+let dy = n1.y-n2.y;
+let dist = Math.sqrt(dx*dx+dy*dy);
+
+if(dist<MAX_DIST){
+ctx.strokeStyle = "rgba(34,197,94,"+(1-dist/MAX_DIST)+")";
+ctx.lineWidth=1;
+ctx.beginPath();
+ctx.moveTo(n1.x,n1.y);
+ctx.lineTo(n2.x,n2.y);
+ctx.stroke();
+}
+}
+
+ctx.fillStyle="#22c55e";
+ctx.beginPath();
+ctx.arc(n1.x,n1.y,2.5,0,Math.PI*2);
+ctx.fill();
+}
+
+requestAnimationFrame(draw);
+}
+
+draw();
+
+window.addEventListener("resize",()=>{
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+});
+
+</script>
+
+</body>
+</html>
