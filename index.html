@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Me</title>
+<title>About Me | Graph Theorist</title>
 
 <style>
 
 body{
 margin:0;
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background:#0f172a;
-color:#e5e7eb;
+background:#f8fafc;
+color:#0f172a;
 overflow-x:hidden;
 }
 
@@ -19,8 +19,8 @@ overflow-x:hidden;
 nav{
 position:sticky;
 top:0;
-background:#020617;
-border-bottom:1px solid #1e293b;
+background:#ffffff;
+border-bottom:1px solid #e2e8f0;
 padding:14px 30px;
 display:flex;
 justify-content:space-between;
@@ -31,7 +31,7 @@ z-index:10;
 nav .logo{
 font-weight:700;
 font-size:18px;
-color:#bfcce8;
+color:#16a34a;
 }
 
 nav ul{
@@ -44,13 +44,13 @@ padding:0;
 
 nav a{
 text-decoration:none;
-color:#cbd5f5;
+color:#334155;
 font-size:14px;
 transition:0.3s;
 }
 
 nav a:hover{
-color:#22c55e;
+color:#16a34a;
 }
 
 /* HEADER */
@@ -66,7 +66,7 @@ margin-bottom:10px;
 }
 
 .subtitle{
-color:#94a3b8;
+color:#64748b;
 }
 
 /* CONTAINER */
@@ -76,18 +76,19 @@ margin:auto;
 padding:20px;
 position:relative;
 z-index:1;
+opacity:0.75;
 }
 
 .card{
-background:#111827;
+background:#ffffff;
 border-radius:20px;
 padding:30px;
 margin:20px 0;
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
 code{
-background:#020617;
+background:#f1f5f9;
 padding:4px 6px;
 border-radius:6px;
 }
@@ -110,13 +111,13 @@ z-index:0;
 
 /* Unvisited link */
 a:link {
-    color: green;
+    color: teal;
     text-decoration: none; /* removes underline */
 }
 
 /* Visited link */
 a:visited {
-    color: green;
+    color: teal;
 }
 
 /* Mouse hover */
@@ -129,7 +130,7 @@ a:hover {
 a:active {
     color: teal;
 }
- 
+
 </style>
 </head>
 
@@ -141,7 +142,7 @@ a:active {
 <div class="logo">G = (V, E)</div>
 <ul>
 <li><a href="index.html">Home</a></li>
-<li><a href="index.html">About</a></li>
+<li><a href="about.html">About</a></li>
 <li><a href="#research">Research</a></li>
 <li><a href="#contact">Contact</a></li>
 </ul>
@@ -157,12 +158,9 @@ a:active {
 <div class="card">
 <h2>About Me</h2>
 <p>
-I am a PhD scholar in the Department of Mathematics at IIT Jodhpur working in <b>Graph Theory</b> and <b>Combinatorics</b>. I am working under <a href="https://brahadeesh1994.github.io/">Dr. Brahadeesh Sankarnarayanan.</a>
+I am a PhD scholar in the Department of Mathematics at IIT Jodhpur working in <b>Graph Theory</b> and <b>Combinatorics</b>. I am working under <a href="https://brahadeesh1994.github.io/">Dr. Brahadeesh Sankarnarayanan</a> at <a href="https://iitj.ac.in">Indian Institue of Technology, Jodhpur</a> in the department of Mathematics.
 </p>
 
-<p>
-To me, mathematics resembles a graph: ideas are vertices, and insights form the edges connecting them.
-</p>
 </div>
 
 <div class="card" id="research">
@@ -177,8 +175,8 @@ To me, mathematics resembles a graph: ideas are vertices, and insights form the 
 
 <div class="card" id="contact">
 <h2>Contact</h2>
-<p><a href="www.linkedin.com/in/yash-chawda-65031a25b" color="White">LinkedIn</a></p>
-<p><a href="mailto:p25ma0204@iitj.ac.in">Email</a></p>
+<p><a href="https://www.linkedin.com/in/yash-chawda-65031a25b" color="White">LinkedIn</a></p>
+<p><a href="mailto:p25ma0204@iitj.ac.in">p25ma0204@iitj.ac.in</a></p>
 <p><a href="https://orcid.org/0009-0003-3713-8556">ORCID</a></p>
 </div>
 
@@ -229,7 +227,7 @@ let dy = n1.y-n2.y;
 let dist = Math.sqrt(dx*dx+dy*dy);
 
 if(dist<MAX_DIST){
-ctx.strokeStyle = "rgba(34,197,94,"+(1-dist/MAX_DIST)+")";
+ctx.strokeStyle = "rgba(22,163,74,"+(1-dist/MAX_DIST)*0.5+")";
 ctx.lineWidth=1;
 ctx.beginPath();
 ctx.moveTo(n1.x,n1.y);
@@ -238,9 +236,9 @@ ctx.stroke();
 }
 }
 
-ctx.fillStyle="#22c55e";
+ctx.fillStyle="#16a34a";
 ctx.beginPath();
-ctx.arc(n1.x,n1.y,2.5,0,Math.PI*2);
+ctx.arc(n1.x,n1.y,2.2,0,Math.PI*2);
 ctx.fill();
 }
 
