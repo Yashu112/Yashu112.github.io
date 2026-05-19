@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Me</title>
+<title>About Me | Graph Theorist</title>
 
 <style>
 
@@ -59,6 +59,8 @@ text-align:center;
 padding:100px 20px 60px 20px;
 position:relative;
 color:#008080;
+overflow:hidden;
+z-index:1;
 }
 
 h1{
@@ -67,8 +69,14 @@ margin-bottom:10px;
 color:#008080;
 }
 
+h2{
+color:#008080;
+}
+
 .subtitle{
 color:#64748b;
+position: relative;
+z-index:1;
 }
 
 /* CONTAINER */
@@ -78,7 +86,6 @@ margin:auto;
 padding:20px;
 position:relative;
 z-index:1;
-opacity:0.75;
 }
 
 .card{
@@ -103,7 +110,7 @@ color:#64748b;
 
 /* GRAPH CANVAS */
 #graphCanvas{
-position:fixed;
+position:absolute;
 top:0;
 left:0;
 width:100%;
@@ -138,27 +145,34 @@ a:active {
 
 <body>
 
-<canvas id="graphCanvas"></canvas>
 
 <nav>
-<div class="logo">G</div>
+<div class="logo">G = (V, E)</div>
 <ul>
 <li><a href="index.html">Home</a></li>
-<li><a href="index.html">About</a></li>
+<li><a href="about.html">About</a></li>
 <li><a href="#research">Research</a></li>
 <li><a href="#contact">Contact</a></li>
-<li><a href="game.html">Tree Coloring Interface</a></li>
 </ul>
 </nav>
 
 <header>
+<canvas id="graphCanvas"></canvas>
+
 <h1>Research</h1>
+<p class="subtitle">My Research work at IITJ</p>
 </header>
+
+<hr>
 
 <div class="container">
 
-<p>under construction</p>
-  
+<div id="about">
+
+<p>
+coming soon
+</p>
+</div>
 </div>
 
 <footer>
