@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tree Coloring Explorer</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7f7fb;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  text-align: center;
+  margin-top: 25px;
+  background: white;
+  padding: 25px 35px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+h2 { color:#444; }
+
+.controls {
+  margin: 15px 0;
+}
+
+select, button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin: 5px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+button {
+  background: #e6ecff;
+  border: none;
+}
+
+canvas {
+  margin-top: 15px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background: #fcfcff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Tree Coloring Explorer</h2>
+
+  <div class="controls">
+    <select id="graphSelect">
+      <option value="rand3">Random Tree (Depth 3)</option>
+      <option value="rand4">Random Tree (Depth 4)</option>
+      <option value="custom">Build Your Tree</option>
+      <option value="binary4">Binary Tree (Depth 3)</option>
+      <option value="ternary4">Ternary Tree (Depth 3)</option>
+    </select>
+
+    <select id="colorSelect">
+      <option value="2">2 Colors</option>
+      <option value="3">3 Colors</option>
+      <option value="4" selected>4 Colors</option>
+    </select>
+
+    <button id="randomBtn">🔄 Random</button>
+	<div id="builderControls">
+	  <button onclick="addChild()">➕ Add</button>
+	  <button onclick="deleteNode()">❌ Delete</button>
+	  <button onclick="finishBuilder()">✅ Done</button>
+	</div>
+  </div>
+
+  <canvas id="c" width="1000" height="550"></canvas>
+</div>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+let baseColors = ["#ffffff","#ffadad","#caffbf","#a0c4ff","#f9e1a8"];
+let activeColors = baseColors;
+
+let nodes={}, edges=[], tree=null;
+let currentType="rand3";
+
+// builder
+let builderMode=false, selectedNode=null, nextId=0;
+let draggingNode=null;
+
+// ---------- TREE GENERATORS ----------
+
+function buildRandomTree(maxDepth){
+  let id=0;
+  function make(depth,force=false){
+    let node={id:id++,children:[]};
+
+    if(depth<maxDepth){
+      let stop=!force && Math.random()<0.2;
+      if(!stop){
+        let r=Math.random(), c;
+        if(r<0.4) c=2;
+        else if(r<0.7) c=3;
+        else if(r<0.9) c=4;
+        else c=5+Math.floor(Math.random()*2);
+
+        for(let i=0;i<c;i++){
+          node.children.push(make(depth+1));
+        }
+      }
+    }
+    return node;
+  }
+  return make(1,true);
+}
+
+function buildBinaryTree(d){
+  let id=0;
+  function make(depth){
+    let n={id:id++,children:[]};
+    if(depth<d){
+      n.children.push(make(depth+1));
+      n.children.push(make(depth+1));
+    }
+    return n;
+  }
+  return make(1);
+}
+
+function buildKaryTree(k,d){
+  let id=0;
+  function make(depth){
+    let n={id:id++,children:[]};
+    if(depth<d){
+      for(let i=0;i<k;i++) n.children.push(make(depth+1));
+    }
+    return n;
+  }
+  return make(1);
+}
+
+function fitTreeToCanvas(){
+  let minX = Infinity, maxX = -Infinity;
+  let minY = Infinity, maxY = -Infinity;
+
+  for (let id in nodes){
+    let n = nodes[id];
+    minX = Math.min(minX, n.x);
+    maxX = Math.max(maxX, n.x);
+    minY = Math.min(minY, n.y);
+    maxY = Math.max(maxY, n.y);
+  }
+
+  let treeWidth = maxX - minX;
+  let treeHeight = maxY - minY;
+
+  let padding = 40;
+
+  let scaleX = (canvas.width - 2*padding) / treeWidth;
+  let scaleY = (canvas.height - 2*padding) / treeHeight;
+
+  let scale = Math.min(scaleX, scaleY, 1); 
+  // never upscale, only shrink if needed
+
+  for (let id in nodes){
+    nodes[id].x = (nodes[id].x - minX) * scale;
+    nodes[id].y = (nodes[id].y - minY) * scale;
+  }
+
+  // center after scaling
+  let newWidth = treeWidth * scale;
+  let newHeight = treeHeight * scale;
+
+  let offsetX = (canvas.width - newWidth)/2;
+  let offsetY = (canvas.height - newHeight)/2;
+
+  for (let id in nodes){
+    nodes[id].x += offsetX;
+    nodes[id].y += offsetY;
+  }
+}
+
+// ---------- INIT ----------
+
+function initTree(type){
+  currentType = type;
+  builderMode=false;
+  selectedNode=null;
+
+  if(type==="rand3") tree=buildRandomTree(4);
+  else if(type==="rand4") tree=buildRandomTree(5);
+  else if(type==="binary4") tree=buildBinaryTree(4);
+  else if(type==="ternary4") tree=buildKaryTree(3,4);
+  else return;
+
+  nodes={}; edges={};
+
+  edges=[];
+
+  function init(n){
+    nodes[n.id]={x:0,y:0,color:0};
+    (n.children||[]).forEach(c=>{
+      edges.push([n.id,c.id]);
+      init(c);
+    });
+  }
+
+  init(tree);
+  tidyLayout(tree);
+  fitTreeToCanvas();   // ⭐ KEY FIX
+  draw();
+  toggleRandomBtn();
+}
+
+// ---------- CLEAN TREE LAYOUT ----------
+
+let levelGap=90;
+let nextX=0;
+
+function tidyLayout(node, depth=0){
+  if(depth===0) nextX=0;
+
+  let children=node.children||[];
+
+  if(children.length===0){
+    nodes[node.id].x = nextX;
+    nodes[node.id].y = depth*levelGap;
+    nextX += 60;
+  } else {
+    let startX=nextX;
+
+    children.forEach(c=>tidyLayout(c, depth+1));
+
+    let endX = nextX - 60;
+
+    nodes[node.id].x = (startX + endX)/2;
+    nodes[node.id].y = depth*levelGap;
+  }
+}
+
+// ---------- FIT ----------
+
+function fitTree(){
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+
+  for(let id in nodes){
+    let n=nodes[id];
+    minX=Math.min(minX,n.x);
+    maxX=Math.max(maxX,n.x);
+    minY=Math.min(minY,n.y);
+    maxY=Math.max(maxY,n.y);
+  }
+
+  let w=maxX-minX, h=maxY-minY, pad=50;
+
+  let scale=Math.min(
+    (canvas.width-2*pad)/w,
+    (canvas.height-2*pad)/h,
+    1
+  );
+
+  for(let id in nodes){
+    nodes[id].x=(nodes[id].x-minX)*scale+pad;
+    nodes[id].y=(nodes[id].y-minY)*scale+pad;
+  }
+}
+
+// ---------- DRAW ----------
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.strokeStyle = "rgba(80, 80, 100, 0.7)";
+ctx.lineWidth = 1.8;
+ctx.lineCap = "round";
+
+
+  edges.forEach(([u,v])=>{
+    ctx.beginPath();
+    ctx.moveTo(nodes[u].x,nodes[u].y);
+    ctx.lineTo(nodes[v].x,nodes[v].y);
+    ctx.stroke();
+  });
+
+  for(let id in nodes){
+    let n=nodes[id];
+    ctx.shadowColor = "rgba(0,0,0,0.08)";
+ctx.shadowBlur = 4;
+ctx.shadowOffsetY = 2;
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,12,0,2*Math.PI);
+    ctx.fillStyle=activeColors[n.color%activeColors.length];
+    ctx.fill();
+
+    ctx.strokeStyle = (id==selectedNode) ? "#222" : "rgba(50, 50, 70, 0.9)";
+    ctx.lineWidth = (id==selectedNode)?3:1.5;
+    ctx.stroke();
+
+    ctx.fillStyle="#333";
+    ctx.fillText(id,n.x-4,n.y+4);
+ctx.shadowBlur = 0;
+  }
+}
+
+// ---------- INTERACTION ----------
+
+canvas.onmousedown=function(e){
+  let {x,y}=getMouse(e);
+
+  for(let id in nodes){
+    let n=nodes[id];
+    if(dist(n,x,y)<14){
+      if(builderMode){
+        selectedNode=parseInt(id);
+        draggingNode=id;
+      } else {
+        n.color=(n.color+1)%activeColors.length;
+      }
+      draw();
+      return;
+    }
+  }
+};
+
+canvas.onmousemove=function(e){
+  if(builderMode && draggingNode!==null){
+    let {x,y}=getMouse(e);
+
+    nodes[draggingNode].x=x;
+    nodes[draggingNode].y=y;
+
+    draw();
+  }
+};
+
+canvas.onmouseup=function(){
+  draggingNode=null;
+};
+
+// ---------- HELPERS ----------
+
+function getMouse(e){
+  let r=canvas.getBoundingClientRect();
+  return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+
+function dist(n,x,y){
+  let dx=n.x-x, dy=n.y-y;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+// ---------- BUILDER ----------
+
+function startBuilder(){
+  builderMode=true;
+  nodes={0:{x:500,y:80,color:0}};
+  edges=[];
+  selectedNode=0;
+  nextId=1;
+  draw();
+}
+
+function addChild(){
+  if(selectedNode==null) return;
+
+  let id=nextId++;
+  nodes[id]={x:nodes[selectedNode].x+60,y:nodes[selectedNode].y+80,color:0};
+  edges.push([selectedNode,id]);
+  draw();
+}
+
+function deleteNode(){
+  if(selectedNode===0||selectedNode==null) return;
+
+  function remove(id){
+    edges = edges.filter(([u,v])=>u!==id && v!==id);
+    delete nodes[id];
+    Object.keys(nodes).forEach(n=>{
+      edges.forEach(([u,v])=>{
+        if(u==id) remove(v);
+      });
+    });
+  }
+
+  remove(selectedNode);
+  selectedNode=null;
+  draw();
+}
+
+function finishBuilder(){
+  builderMode=false;
+  selectedNode=null;
+  fitTreeToCanvas();   // ⭐ KEY FIX
+  draw();
+}
+
+// ---------- UI ----------
+
+document.getElementById("builderControls").style.display = "none";
+
+document.getElementById("graphSelect").onchange = function(){
+
+  let val = this.value;
+  let builderUI = document.getElementById("builderControls");
+
+  if (val === "custom") {
+
+    // show builder UI
+    builderUI.style.display = "block";
+
+    // hide random button
+    document.getElementById("randomBtn").style.display = "none";
+
+    // start builder with empty canvas
+    startBuilder();
+
+  } else {
+
+    // hide builder UI
+    builderUI.style.display = "none";
+
+    // normal tree init
+    initTree(val);
+  }
+};
+
+document.getElementById("colorSelect").onchange=function(){
+  let k=parseInt(this.value);
+  activeColors=baseColors.slice(0,k+1);
+  draw();
+};
+
+function toggleRandomBtn(){
+  let btn=document.getElementById("randomBtn");
+  btn.style.display=(currentType==="rand3"||currentType==="rand4")?"inline-block":"none";
+}
+
+document.getElementById("randomBtn").onclick=function(){
+  initTree(currentType);
+};
+
+// ---------- START ----------
+
+initTree("rand3");
+</script>
+
+</body>
+</html>
