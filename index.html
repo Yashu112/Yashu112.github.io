@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Me</title>
+<title>About Me | Graph Theorist</title>
 
 <style>
 
@@ -59,6 +59,8 @@ text-align:center;
 padding:100px 20px 60px 20px;
 position:relative;
 color:#008080;
+overflow:hidden;
+z-index:1;
 }
 
 h1{
@@ -73,6 +75,8 @@ color:#008080;
 
 .subtitle{
 color:#64748b;
+position: relative;
+z-index:1;
 }
 
 /* CONTAINER */
@@ -82,7 +86,6 @@ margin:auto;
 padding:20px;
 position:relative;
 z-index:1;
-opacity:0.75;
 }
 
 .card{
@@ -107,7 +110,7 @@ color:#64748b;
 
 /* GRAPH CANVAS */
 #graphCanvas{
-position:fixed;
+position:absolute;
 top:0;
 left:0;
 width:100%;
@@ -142,35 +145,36 @@ a:active {
 
 <body>
 
-<canvas id="graphCanvas"></canvas>
 
 <nav>
-<div class="logo">G</div>
+<div class="logo">G = (V, E)</div>
 <ul>
 <li><a href="index.html">Home</a></li>
-<li><a href="index.html">About</a></li>
-<li><a href="research.html">Research</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="#research">Research</a></li>
 <li><a href="#contact">Contact</a></li>
-<li><a href="game.html">Tree Coloring Interface</a></li>
 </ul>
 </nav>
 
 <header>
+<canvas id="graphCanvas"></canvas>
+
 <h1>Yash Chawda</h1>
 <p class="subtitle">PhD Scholar @ IITJ | Graph Theory & Combinatorics</p>
 </header>
 
+<hr>
+
 <div class="container">
 
-<div class="card">
+<div id="about">
 <h2>About Me</h2>
 <p>
 I am a PhD scholar in the Department of Mathematics at IIT Jodhpur working in <b>Graph Theory</b> and <b>Combinatorics</b>. I am working under <a href="https://brahadeesh1994.github.io/">Dr. Brahadeesh Sankarnarayanan</a> at <a href="https://iitj.ac.in">Indian Institue of Technology, Jodhpur</a> in the department of Mathematics.
 </p>
-
 </div>
 
-<div class="card" id="research">
+<div id="research">
 <h2>Research Interests</h2>
 <ul>
 <li>Graph Theory</li>
@@ -180,7 +184,7 @@ I am a PhD scholar in the Department of Mathematics at IIT Jodhpur working in <b
 </ul>
 </div>
 
-<div class="card" id="contact">
+<div id="contact">
 <h2>Contact</h2>
 <p><a href="https://www.linkedin.com/in/yash-chawda-65031a25b" color="White">LinkedIn</a></p>
 <p><a href="mailto:p25ma0204@iitj.ac.in">p25ma0204@iitj.ac.in</a></p>
