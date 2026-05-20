@@ -255,6 +255,24 @@ a:active {
 <hr>
 <br>
 
+<p>
+    A majority coloring of a graph assigns colors to vertices so that each vertex has at most half of its neighbors in the same color class.
+	This tool lets you experiment with majority colorings on trees. Click any vertex to cycle through the available colors. The goal is to find a valid majority coloring &mdash;
+            one where for every vertex \(v\), at most \(\lfloor \deg(v)/2 \rfloor\) neighbors share \(v\)'s color &mdash; using as few colors as possible.
+        </p>
+
+        <p>
+            Select a tree type from the first dropdown and the number of colors from the second.
+            Use <em>Regenerate</em> to draw a fresh random tree, or choose <em>Your Tree</em>
+            to build a custom tree: click a node to select it, then use <em>Add child</em>
+            and <em>Delete</em> to modify the tree, and <em>Done</em> when finished.
+        </p>
+
+        <p>
+            Built with <a href="brahadeesh1994.github.io">Dr Brahadeesh</a> as a part of work on the majority coloring game on trees; see the
+            <a href="https://brahadeesh1994.github.io/research.html#majority-coloring-game">research description</a> for context.
+        </p>
+
 <div class="game-wrapper">
             <div class="game-controls">
                 <select id="graphSelect">
