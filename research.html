@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Me | Graph Theorist</title>
+<script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
 <style>
 
@@ -26,12 +36,6 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 z-index:10;
-}
-
-nav .logo{
-font-weight:700;
-font-size:18px;
-color:#16a34a;
 }
 
 nav ul{
@@ -88,14 +92,6 @@ position:relative;
 z-index:1;
 }
 
-.card{
-background:#ffffff;
-border-radius:20px;
-padding:30px;
-margin:20px 0;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-}
-
 code{
 background:#f1f5f9;
 padding:4px 6px;
@@ -140,39 +136,54 @@ a:active {
     color: teal;
 }
 
+.logo canvas {
+    width: 60px;
+    height: 60px;
+    display: block;
+}
 </style>
 </head>
 
 <body>
 
-
 <nav>
-<div class="logo">G = (V, E)</div>
+<div class="logo">
+  <canvas id="logoCanvas"></canvas>
+</div>
 <ul>
 <li><a href="index.html">Home</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="#research">Research</a></li>
-<li><a href="#contact">Contact</a></li>
+<li><a href="index.html">About</a></li>
+<li><a href="research.html">Research</a></li>
+<li><a href="index.html/#contact">Contact</a></li>
+<li><a href="game.html">Tree Coloring Explorer</a></li>
 </ul>
 </nav>
 
 <header>
 <canvas id="graphCanvas"></canvas>
 
-<h1>Research</h1>
-<p class="subtitle">My Research work at IITJ</p>
+<h1>Research Work</h1>
 </header>
 
 <hr>
 
 <div class="container">
 
-<div id="about">
-
+<div id="doctoral_research">
+    <div>
+        <h2>Doctoral Research</h2>
+        <p  class="subtitle">IIT Jodhpur $\cdot$ Guided by <a href="https://brahadeesh1994.github.io/index.html">Brahadeesh Sankarnarayanan</a></p>
+    </div>
+<hr>
 <p>
-coming soon
+    <b><font color= #008080>Majority Game Coloring of Trees:</font></b>
+    A majority coloring of a graph is a vertex coloring in which each vertex has at most half of its neighbors sharing its color; Lovász showed in 1966 that two colors always suffice for any finite graph. In the majority coloring game, two players alternately color vertices from a fixed palette while maintaining the majority condition, and the least number of colors for which the first player has a winning strategy is the majority game chromatic number $\mu_g(G)$. While is unbounded in general, it is at most 4 for trees. We studied $\mu_g(T)$ trees using a configuration-based strategy, in which the first player aims to prevent a small family of local obstruction patterns from arising.
+    <br><br>
+    An interactive <a href="game.html">Tree Coloring Explorer</a> is available for experimenting with the majority colorings on trees.
 </p>
 </div>
+<hr>
+
 </div>
 
 <footer>
@@ -244,6 +255,81 @@ window.addEventListener("resize",()=>{
 canvas.width=window.innerWidth;
 canvas.height=window.innerHeight;
 });
+
+</script>
+
+<script>
+const logoCanvas = document.getElementById("logoCanvas");
+const logoctx = logoCanvas.getContext("2d");
+
+const size = 60;
+logoCanvas.width = size;
+logoCanvas.height = size;
+
+const cx = size / 2;
+const cy = size / 2;
+const R = 22;  // outer radius
+const r = 10;  // inner radius
+
+let outer = [];
+let inner = [];
+
+// compute pentagon + inner star
+for(let i=0;i<5;i++){
+  let angle = -Math.PI/2 + i * 2*Math.PI/5;
+
+  outer.push({
+    x: cx + R * Math.cos(angle),
+    y: cy + R * Math.sin(angle)
+  });
+
+  inner.push({
+    x: cx + r * Math.cos(angle),
+    y: cy + r * Math.sin(angle)
+  });
+}
+
+// draw
+function drawLogo(){
+  logoctx.clearRect(0,0,size,size);
+
+  logoctx.strokeStyle = "#16a34a";
+  logoctx.fillStyle = "#16a34a";
+  logoctx.lineWidth = 1.5;
+
+  // outer pentagon
+  for(let i=0;i<5;i++){
+    let j = (i+1)%5;
+    drawEdge(outer[i], outer[j]);
+  }
+
+  // inner star (skip one)
+  for(let i=0;i<5;i++){
+    let j = (i+2)%5;
+    drawEdge(inner[i], inner[j]);
+  }
+
+  // spokes
+  for(let i=0;i<5;i++){
+    drawEdge(outer[i], inner[i]);
+  }
+
+  // nodes
+  [...outer, ...inner].forEach(p=>{
+    logoctx.beginPath();
+    logoctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
+    logoctx.fill();
+  });
+}
+
+function drawEdge(a,b){
+  logoctx.beginPath();
+  logoctx.moveTo(a.x,a.y);
+  logoctx.lineTo(b.x,b.y);
+  logoctx.stroke();
+}
+
+drawLogo();
 
 </script>
 
