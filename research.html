@@ -191,71 +191,69 @@ a:active {
 </footer>
 
 <script>
+const bgCanvas = document.getElementById("graphCanvas");
+const bgCtx = bgCanvas.getContext("2d");
 
-const canvas = document.getElementById("graphCanvas");
-const ctx = canvas.getContext("2d");
+bgCanvas.width = window.innerWidth;
+bgCanvas.height = document.querySelector("header").offsetHeight;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let nodes = [];
+let bgNodes = [];
 const NODE_COUNT = 60;
 const MAX_DIST = 130;
 
 for(let i=0;i<NODE_COUNT;i++){
-nodes.push({
- x:Math.random()*canvas.width,
- y:Math.random()*canvas.height,
+bgNodes.push({
+ x:Math.random()*bgCanvas.width,
+ y:Math.random()*bgCanvas.height,
  vx:(Math.random()-0.5)*0.6,
  vy:(Math.random()-0.5)*0.6
 });
 }
 
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
+function drawBG(){
+bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
 
-for(let i=0;i<nodes.length;i++){
-let n1 = nodes[i];
+for(let i=0;i<bgNodes.length;i++){
+let n1 = bgNodes[i];
 
 n1.x += n1.vx;
 n1.y += n1.vy;
 
-if(n1.x<0||n1.x>canvas.width) n1.vx*=-1;
-if(n1.y<0||n1.y>canvas.height) n1.vy*=-1;
+if(n1.x<0||n1.x>bgCanvas.width) n1.vx*=-1;
+if(n1.y<0||n1.y>bgCanvas.height) n1.vy*=-1;
 
-for(let j=i+1;j<nodes.length;j++){
-let n2 = nodes[j];
+for(let j=i+1;j<bgNodes.length;j++){
+let n2 = bgNodes[j];
 
 let dx = n1.x-n2.x;
 let dy = n1.y-n2.y;
 let dist = Math.sqrt(dx*dx+dy*dy);
 
 if(dist<MAX_DIST){
-ctx.strokeStyle = "rgba(22,163,74,"+(1-dist/MAX_DIST)*0.5+")";
-ctx.lineWidth=1;
-ctx.beginPath();
-ctx.moveTo(n1.x,n1.y);
-ctx.lineTo(n2.x,n2.y);
-ctx.stroke();
+bgCtx.strokeStyle = "rgba(22,163,74,"+(1-dist/MAX_DIST)*0.4+")";
+bgCtx.lineWidth=1;
+bgCtx.beginPath();
+bgCtx.moveTo(n1.x,n1.y);
+bgCtx.lineTo(n2.x,n2.y);
+bgCtx.stroke();
 }
 }
 
-ctx.fillStyle="#16a34a";
-ctx.beginPath();
-ctx.arc(n1.x,n1.y,2.2,0,Math.PI*2);
-ctx.fill();
+bgCtx.fillStyle="#16a34a";
+bgCtx.beginPath();
+bgCtx.arc(n1.x,n1.y,2,0,Math.PI*2);
+bgCtx.fill();
 }
 
-requestAnimationFrame(draw);
+requestAnimationFrame(drawBG);
 }
 
-draw();
+drawBG();
 
 window.addEventListener("resize",()=>{
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+bgCanvas.width = window.innerWidth;
+bgCanvas.height = document.querySelector("header").offsetHeight;
 });
-
 </script>
 
 <script>
