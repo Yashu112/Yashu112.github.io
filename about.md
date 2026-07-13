@@ -1,9 +1,11 @@
 ---
 layout: default
 title: About
----
 
-# About Me
+hero : true
+hero_title: About Me
+subtitle: PhD Scholar at IIT Jodhpur
+---
 
 I am a PhD scholar in Mathematics at **IIT Jodhpur** working in **Graph Theory** and **Combinatorics**.
 

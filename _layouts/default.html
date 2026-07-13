@@ -11,9 +11,23 @@
 
 {% include navbar.html %}
 
-{{ content }}
+{% if page.hero %}
+    {% include hero.html %}
+{% endif %}
+
+<hr>
+
+
+    <main class="container">
+        {{ content }}
+    </main>
+
+<hr>
 
 {% include footer.html %}
+
+<script src="{{ '/assets/js/logo.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/banner.js' | relative_url }}"></script>
 
 </body>
 
