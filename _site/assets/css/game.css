@@ -131,3 +131,79 @@ a:hover {
 a:active {
     color: teal;
 }
+
+
+
+        /* ============================================================
+           TREE COLORING EXPLORER — page-specific styles
+           ============================================================ */
+
+.game-wrapper {
+    max-width: 900px;
+    margin: 0 auto 60px auto;   /* THIS is the key */
+    text-align: center;
+}
+
+.game-controls {
+margin: 0 0 14px 0;
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+align-items: center;
+justify-content: center;
+}
+
+.game-controls select,
+.game-controls button {
+font-family: "Latin Modern Roman", Georgia, serif;
+font-size: 11pt;
+padding: 5px 12px;
+background: #ffffff;
+color: #0008080;
+border: 1px solid #008080;
+cursor: pointer;
+}
+
+.game-controls button:hover {
+border-color: #16a34a;
+}
+
+.game-controls button:active {
+background: #e2e8f0;
+}
+
+
+.builder-controls {
+display: flex;
+gap: 8px;
+}
+
+.game-scroll {
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+display: flex;
+justify-content: center;
+}
+
+#c {
+display: block;
+border: 1px solid #008080;
+background: #fcfcff;
+height:500px;
+max-width: 120%;
+}
+
+.game-caption {
+font-size: 10.5pt;
+color: var(--grey);
+margin: 10px 0 0 0;
+font-style: italic;
+line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+#c {
+    background: #1a1a20;
+    border-color: #2c2c2c;
+}
+}

@@ -29,6 +29,19 @@
 <script src="{{ '/assets/js/logo.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/banner.js' | relative_url }}"></script>
 
+{% if page.game %}
+<link rel="stylesheet"
+      href="{{ '/assets/css/game.css' | relative_url }}">
+<script src="{{ '/assets/js/game.js' | relative_url }}"></script>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+    }
+});
+</script>
 </body>
 
 </html>

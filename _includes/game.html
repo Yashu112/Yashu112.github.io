@@ -1,0 +1,36 @@
+
+<div class="game-wrapper">
+            <div class="game-controls">
+                <select id="graphSelect">
+                    <option value="rand3">Random Tree (Depth 3)</option>
+                    <option value="rand4">Random Tree (Depth 4)</option>
+                    <option value="custom">Your Tree</option>
+                    <option value="binary4">Binary Tree (Depth 3)</option>
+                    <option value="ternary4">Ternary Tree (Depth 3)</option>
+                </select>
+                <select id="colorSelect">
+                    <option value="2">2 Colors</option>
+                    <option value="3">3 Colors</option>
+                    <option value="4" selected>4 Colors</option>
+                </select>
+                <button id="randomBtn">Regenerate</button>
+                <button id="clearColorsBtn">Clear all colors</button>
+                <button onclick="zoomBy(1.3)" title="Zoom in">+</button>
+                <button onclick="zoomBy(1/1.3)" title="Zoom out">&#x2212;</button>
+                <button onclick="resetView()" title="Reset view">Fit</button>
+                <button id="editBtn">Edit</button>
+                <div id="builderControls" class="builder-controls">
+                    <button onclick="addChild()">Add child</button>
+                    <button onclick="deleteNode()">Delete</button>
+                    <button onclick="finishBuilder()">Done</button>
+                </div>
+</div>
+
+<div class="game-scroll">
+    <canvas id="c"></canvas>
+</div>
+
+<p class="game-caption">
+    A coloring is a valid majority coloring if, for every vertex \(v\),
+    at most \(\lfloor \deg(v)/2 \rfloor\) neighbors of \(v\) share its color.
+</p>
