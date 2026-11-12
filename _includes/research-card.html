@@ -1,0 +1,22 @@
+<section class="research-item">
+
+<h2>{{ item.title }}</h2>
+
+<p class="research-meta">
+    {{ item.place }}
+    ·
+    With 
+    {% for person in include.item.collaborators %}
+    {% if person.url %}
+        <a href="{{ person.url }}">{{ person.name }}</a>
+    {% else %}
+        {{ person.name }}
+    {% endif %}
+    {% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+</p>
+<hr>
+
+{{ item.content }}
+
+</section>

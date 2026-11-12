@@ -131,3 +131,22 @@ a:hover {
 a:active {
     color: teal;
 }
+
+.research-item{
+    margin:50px 0;
+}
+
+.research-item h2{
+    color:#008080;
+    margin-bottom:18px;
+}
+
+.research-meta{
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+.research-title{
+    color:#008080;
+    font-weight:700;
+}
